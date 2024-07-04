@@ -1,0 +1,37 @@
+{
+    "title": "multi_plankton_classification",
+    "summary": "return the label of an image with multi plankton or not",
+    "description": [
+        "multi_plankton_classification is an application using the DEEPaaS API.\n",
+        "return the label of an image with multi plankton or not"
+    ],
+    "keywords": [
+        "docker",
+        "api-v2"
+    ],
+    "license": "MIT",
+    "date_creation": "2024-07-04",
+    "sources": {
+		"dockerfile_repo": "https://github.com/ai4os-hub/multi_plankton_classification",
+		"docker_registry_repo": "ai4oshub/multi_plankton_classification",
+		"code": "https://github.com/ai4os-hub/multi_plankton_classification",
+		"ai4_template": "ai4-template/2.0.1"
+    },
+    "continuous_integration": {
+        "build_status_badge": "https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS-hub/multi_plankton_classification/main",
+        "build_status_url": "https://jenkins.services.ai4os.eu/job/AI4OS-hub/job/multi_plankton_classification/job/main/"
+    },
+    "tosca": [
+        {
+            "title": "Mesos (CPU)",
+            "url": "https://raw.githubusercontent.com/indigo-dc/tosca-templates/master/deep-oc/deep-oc-marathon-webdav.yml",
+            "inputs": [
+                "rclone_conf",
+                "rclone_url",
+                "rclone_vendor",
+                "rclone_user",
+                "rclone_pass"
+            ]
+        }
+    ]
+}
