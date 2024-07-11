@@ -26,8 +26,18 @@ an exemplar module [2].
 
 from pathlib import Path
 import pkg_resources
+import os
 
 from multi_plankton_classification.misc import _catch_error
+import multi_plankton_classification.config as cfg
+
+from webargs import fields, validate
+
+from multi_plankton_classification.utils import (
+    load_model,
+    load_filename,
+    predict_image
+)
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -64,17 +74,57 @@ def get_metadata():
     return meta
 
 
+def get_predict_args():
+    """
+    Get the list of arguments for the predict function
+    """
+    # Get list of available models
+    
+    
+    #######Mettre à jour la liste des modèles
+    list_models = list()
 
-# def get_predict_args():
-#     return {}
-#
-#
+    for filename in os.listdir(cfg.MODEL_DIR):
+        if filename.endswith(".pt"):
+            list_models.append(filename[:-3])
+        elif "pano" in filename:
+            list_models.append(filename)
+                        
+
+    arg_dict = {
+        "image": fields.Field(
+            required=True,
+            type="file",
+            location="form",
+            description="An image containing plankton to separate",
+        ),
+        "model": fields.Str(
+            required=False,
+            missing=list_models,
+            enum=list_models,
+            description="The model used to perform instance segmentation"
+        ),
+
+    }
+
+    return arg_dict
+
+
 # @_catch_error
- def predict(**kwargs):
-     """ 
-     Prediction function 
-     """
+def predict(**kwargs):
+    """ 
+         Prediction function 
+    """
      
-     return None
+    #Load model
+    model,image_size, classes = load_model("classifier_multi_single_plancton_limit10000_bis")
+    
+    #Change image format
+    image=load_filename(kwargs['image'].filename, image_size)
+
+    #Get predicted classification
+    label,score = predict_image(model, image, classes)
+     
+    return {"label":label,"score":str(score)}
 
 
